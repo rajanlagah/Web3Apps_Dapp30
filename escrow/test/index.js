@@ -7,7 +7,7 @@ const checkError = async (promis, expectedErr) => {
     assert(e.message.includes(expectedErr));
     return;
   }
-  return false;
+  assert(false);
 };
 
 contract("Escrow", (accounts) => {
