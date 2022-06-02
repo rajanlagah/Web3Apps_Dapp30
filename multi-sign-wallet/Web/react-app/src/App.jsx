@@ -29,10 +29,15 @@ function App() {
     setweb3(_web3);
     setContract(_contract);
     setAccounts(_accounts);
+    window.ethereum.on('accountsChanged', acc => {
+      setAccounts(acc);
+    });
   };
 
   useEffect(() => {
     getSetContract();
+    
+
   }, []);
 
   useEffect(() => {
