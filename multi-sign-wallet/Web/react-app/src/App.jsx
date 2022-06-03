@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
-import logo from "./logo.svg";
+
 import "./App.css";
 import { getWeb3 } from "./Utility";
 import Multisig from "./contracts/MultiSig.json";
+import CreateEventSection from "./component/CreateEvent";
+import { Button, Grid, List, ListItem, Stack } from "@mui/material";
+import CustomListItem from "./component/CustomList";
+import EventDetails from "./component/EventDetails";
 
 function App() {
   const [contract, setContract] = useState();
@@ -29,15 +33,13 @@ function App() {
     setweb3(_web3);
     setContract(_contract);
     setAccounts(_accounts);
-    window.ethereum.on('accountsChanged', acc => {
+    window.ethereum.on("accountsChanged", (acc) => {
       setAccounts(acc);
     });
   };
 
   useEffect(() => {
     getSetContract();
-    
-
   }, []);
 
   useEffect(() => {
@@ -93,33 +95,35 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <span>{accounts && accounts[0]}</span>
-        <span>{contractBalance && contractBalance}</span>
+        <div>{accounts && accounts[0]}</div>
       </header>
       <section>
-        <input
-          placeholder="amount"
-          value={eventAmount}
-          onChange={(e) => setEventAmount(e.target.value)}
-        />
-        <input
-          placeholder="receiver address"
-          value={receiverAddress}
-          onChange={(e) => setreceiverAddress(e.target.value)}
-        />
-        <button onClick={createEvent}>Create Event</button>
+        <span>{contractBalance && contractBalance}</span>
+        <Grid container alignItems={'center'} justifyContent="center" height={"80vh"}>
+          <Grid item sm={8} md={6}>
+            {eventId > 0 && (
+              <EventDetails
+                eventId={eventId}
+                eventVoteCount={eventVoteCount}
+                eventMoneySent={eventMoneySent}
+                receiverAddress={receiverAddress}
+                handleSendMoney={handleSendMoney}
+              />
+            )}
+            {eventId == 0 && <span> No Event Found</span>}
+          </Grid>
+          <Grid item sm={12} md={6} >
+            <CreateEventSection
+              eventAmount={eventAmount}
+              setEventAmount={setEventAmount}
+              setreceiverAddress={setreceiverAddress}
+              createEvent={createEvent}
+              receiverAddress={receiverAddress}
+            />
+          </Grid>
+        </Grid>
       </section>
-      <br/><br/>
-      {eventId > 0 && (
-        <section>
-          <span>Event id : {eventId}</span> <br/>
-          <span>VoteCount : {eventVoteCount}</span><br/>
-          <span>Sent id : {JSON.stringify(eventMoneySent)}</span><br/>
-          <span>receiver address : {receiverAddress}</span><br/>
-        </section>
-      )}
-      <br/><br/>
-      <button onClick={handleSendMoney}>Vote</button>
+      <br />
     </div>
   );
 }
