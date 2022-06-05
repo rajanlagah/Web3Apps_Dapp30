@@ -2,7 +2,7 @@ pragma solidity ^0.8.0;
 
 contract VoteMachine {
     uint public maxElectionId = 0;
-    address OWNER;
+    address public OWNER;
 
     struct Election {
         uint id;
